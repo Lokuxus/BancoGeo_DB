@@ -8,7 +8,6 @@ package Database;
 import java.sql.*;
 import java.util.Properties;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
