@@ -52,7 +52,6 @@ public class CadastroVeiculo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Nome da Categoria");
 
         salvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfaceGrafica/confirmaMenor.png"))); // NOI18N

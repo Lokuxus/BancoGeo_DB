@@ -61,15 +61,12 @@ public class CadastroProblemas extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Data Abertura");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(240, 240, 240));
         jLabel4.setText("Descrição");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(240, 240, 240));
         jLabel5.setText("Categoria");
 
         descricao.setColumns(20);
@@ -77,7 +74,6 @@ public class CadastroProblemas extends javax.swing.JFrame {
         jScrollPane1.setViewportView(descricao);
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(240, 240, 240));
         jLabel6.setText("Cadastro de Problemas");
 
         salvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfaceGrafica/confirma.png"))); // NOI18N

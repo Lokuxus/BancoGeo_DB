@@ -64,10 +64,8 @@ public class CadastroMedida extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Data de Execução");
 
-        jLabel2.setForeground(new java.awt.Color(240, 240, 240));
         jLabel2.setText("Descrição");
 
         descricao.setColumns(20);
@@ -75,10 +73,8 @@ public class CadastroMedida extends javax.swing.JFrame {
         jScrollPane1.setViewportView(descricao);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(240, 240, 240));
         jLabel3.setText("Cadastro de Medida");
 
-        jLabel4.setForeground(new java.awt.Color(240, 240, 240));
         jLabel4.setText("Custo:");
 
         salvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfaceGrafica/confirma.png"))); // NOI18N
