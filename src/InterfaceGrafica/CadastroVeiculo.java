@@ -34,7 +34,7 @@ public class CadastroVeiculo extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        nome = new javax.swing.JTextField();
+        placa = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         salvar = new javax.swing.JButton();
 
@@ -52,9 +52,9 @@ public class CadastroVeiculo extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel1.setText("Nome da Categoria");
+        jLabel1.setText("Placa do Carro");
 
-        salvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/InterfaceGrafica/confirmaMenor.png"))); // NOI18N
+        salvar.setText("Cadastrar");
         salvar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 salvarMouseClicked(evt);
@@ -69,10 +69,10 @@ public class CadastroVeiculo extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nome, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                .addComponent(placa, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(salvar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
+                .addComponent(salvar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,7 +80,7 @@ public class CadastroVeiculo extends javax.swing.JFrame {
                 .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(salvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nome)
+                    .addComponent(placa)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33))
         );
@@ -106,11 +106,11 @@ public class CadastroVeiculo extends javax.swing.JFrame {
         {
             con.conecta();
             con.stm = con.con.prepareStatement("insert into veiculo (placa) values (?)");
-            con.stm.setString(1, nome.getText());
+            con.stm.setString(1, placa.getText());
             con.stm.execute();
             con.desconecta();
             JOptionPane.showMessageDialog(null, "Inserido com sucesso");
-            nome.setText("");
+            placa.setText("");
             dispose();
         }
         catch(Exception e)
@@ -159,7 +159,7 @@ public class CadastroVeiculo extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField nome;
+    private javax.swing.JTextField placa;
     private javax.swing.JButton salvar;
     // End of variables declaration//GEN-END:variables
 }

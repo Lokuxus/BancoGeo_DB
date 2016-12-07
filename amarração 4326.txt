@@ -16,6 +16,7 @@ create table veiculo (
 
 create table ponto (
 	id SERIAL PRIMARY KEY,
+	data timestamp,
 	latitude geometry,
 	longitude geometry
 );
