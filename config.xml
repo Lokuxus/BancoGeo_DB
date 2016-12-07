@@ -5,7 +5,7 @@
 <entry key="jdbc.url">jdbc:postgresql://localhost:5432</entry>
 <entry key="jdbc.passwd">123456</entry>
 <entry key="jdbc.statement">org.postgresql.jdbc</entry>
-<entry key="jdbc.banco">db_prefeitura</entry>
-<entry key="jdbc.user">us_desenvolvimento</entry>
+<entry key="jdbc.banco">db_geometrico</entry>
+<entry key="jdbc.user">postgres</entry>
 <entry key="jdbc.driver">org.postgresql.Driver</entry>
 </properties>

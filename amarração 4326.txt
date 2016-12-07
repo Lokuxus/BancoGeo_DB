@@ -1,22 +1,26 @@
+create database db_geometrico;
+
+create extension postgis;
+
 Create table estacionamento (
 	id SERIAL PRIMARY KEY,
 	nome varchar(255),
 	preco_minuto numeric,
 	area geometry
-)
+);
 
 create table veiculo (
 	id SERIAL PRIMARY KEY,
 	placa varchar(255) unique
-)
+);
 
 create table ponto (
 	id SERIAL PRIMARY KEY,
 	latitude geometry,
 	longitude geometry
-)
+);
 
 create table veiculo_ponto (
 	id_veiculo SERIAL,
 	id_ponto SERIAL
-)
+);
