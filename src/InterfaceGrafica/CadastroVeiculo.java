@@ -12,14 +12,14 @@ import javax.swing.JOptionPane;
  *
  * @author gustavo
  */
-public class CadastroCategoria extends javax.swing.JFrame {
+public class CadastroVeiculo extends javax.swing.JFrame {
 
     /**
      * Creates new form CadastroCategoria
      */
     ConexaoJDBC con = new ConexaoJDBC();
     
-    public CadastroCategoria() {
+    public CadastroVeiculo() {
         initComponents();
     }
 
@@ -37,7 +37,6 @@ public class CadastroCategoria extends javax.swing.JFrame {
         nome = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         salvar = new javax.swing.JButton();
-        sair = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -52,8 +51,6 @@ public class CadastroCategoria extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel2.setBackground(new java.awt.Color(153, 0, 153));
-
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Nome da Categoria");
@@ -62,13 +59,6 @@ public class CadastroCategoria extends javax.swing.JFrame {
         salvar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 salvarMouseClicked(evt);
-            }
-        });
-
-        sair.setText("Sair");
-        sair.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sairMouseClicked(evt);
             }
         });
 
@@ -83,9 +73,7 @@ public class CadastroCategoria extends javax.swing.JFrame {
                 .addComponent(nome, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(salvar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sair)
-                .addContainerGap())
+                .addGap(67, 67, 67))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -93,7 +81,6 @@ public class CadastroCategoria extends javax.swing.JFrame {
                 .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(salvar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(nome)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33))
@@ -119,22 +106,19 @@ public class CadastroCategoria extends javax.swing.JFrame {
         try
         {
             con.conecta();
-            con.stm = con.con.prepareStatement("insert into tb_categoria (nome) values (?)");
+            con.stm = con.con.prepareStatement("insert into veiculo (placa) values (?)");
             con.stm.setString(1, nome.getText());
             con.stm.execute();
             con.desconecta();
             JOptionPane.showMessageDialog(null, "Inserido com sucesso");
             nome.setText("");
+            dispose();
         }
         catch(Exception e)
         {
             JOptionPane.showMessageDialog(null, "Erro ao inserir categoria : "+e.getMessage());
         }
     }//GEN-LAST:event_salvarMouseClicked
-
-    private void sairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sairMouseClicked
-        dispose();
-    }//GEN-LAST:event_sairMouseClicked
 
     /**
      * @param args the command line arguments
@@ -153,20 +137,21 @@ public class CadastroCategoria extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastroVeiculo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroCategoria().setVisible(true);
+                new CadastroVeiculo().setVisible(true);
             }
         });
     }
@@ -176,7 +161,6 @@ public class CadastroCategoria extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField nome;
-    private javax.swing.JButton sair;
     private javax.swing.JButton salvar;
     // End of variables declaration//GEN-END:variables
 }

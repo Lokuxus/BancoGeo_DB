@@ -51,7 +51,7 @@ public class CadastroProblemas extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dt_abertura = new javax.swing.JFormattedTextField(mask);
-        categoria = new javax.swing.JComboBox<>();
+        categoria = new javax.swing.JComboBox<String>();
         jScrollPane1 = new javax.swing.JScrollPane();
         descricao = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
@@ -59,8 +59,6 @@ public class CadastroProblemas extends javax.swing.JFrame {
         cancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(240, 240, 240));

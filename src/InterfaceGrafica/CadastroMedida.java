@@ -64,8 +64,6 @@ public class CadastroMedida extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 153, 102));
-
         jLabel1.setForeground(new java.awt.Color(240, 240, 240));
         jLabel1.setText("Data de Execução");
 
