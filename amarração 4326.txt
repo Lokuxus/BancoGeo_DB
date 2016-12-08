@@ -1,6 +1,7 @@
 create database db_geometrico;
 
 create extension postgis;
+create extension postgis;
 
 Create table estacionamento (
 	id SERIAL PRIMARY KEY,
@@ -17,11 +18,14 @@ create table veiculo (
 create table ponto (
 	id SERIAL PRIMARY KEY,
 	data timestamp,
-	latitude geometry,
-	longitude geometry
+	pointo geometry
 );
 
 create table veiculo_ponto (
 	id_veiculo SERIAL,
 	id_ponto SERIAL
 );
+
+
+insert into estacionamento (nome,preco_minuto,area) values ('Univali', 10 , st_geomfromtext('POLYGON(( -48.0 -26.0 , -48.0 -25.9 , -47.9 -25.9 , -47.9 -26 , -48.0 -26.0))',4326));
+insert into estacionamento (nome,preco_minuto,area) values ('Univali2', 10 , st_geomfromtext('POLYGON(( -47.0 -25.0 , -47.0 -24.9 , -46.9 -24.9 , -46.9 -25 , -47.0 -25.0))',4326));

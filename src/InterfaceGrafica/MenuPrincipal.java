@@ -6,13 +6,21 @@
 package InterfaceGrafica;
 
 import Database.ConexaoJDBC;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author gustavo
  */
 public class MenuPrincipal extends javax.swing.JFrame {
+
     public static String id;
+
     /**
      * Creates new form MenuPrincipal
      */
@@ -20,10 +28,42 @@ public class MenuPrincipal extends javax.swing.JFrame {
         initComponents();
     }
 
-    public static boolean testaEstacionamento(ConexaoJDBC con, String ponto){
-     return true;   
+    public static boolean testaEstacionamento(String ponto) {
+        ResultSet auxiliar;
+        ConexaoJDBC con = new ConexaoJDBC();
+        con.conecta();
+        try {
+            con.stm = con.con.prepareStatement("select id, nome, area from estacionamento;");
+//            Connection conexao = con.getCon();
+//            PreparedStatement ps = conexao.prepareStatement("select id, nome, area from estacionamento;");
+//            ResultSet rsps.executeQuery();
+            con.stm.execute();
+
+            if (con.rs != null) {
+                auxiliar = con.rs;
+                auxiliar.first();
+                while (auxiliar.next()) {
+
+                    con.stm = con.con.prepareStatement("select ST_Contains(" + auxiliar.getString("area") + ", " + ponto + ") as contem;");
+                    con.stm.execute();
+                    if (con.rs.getBoolean("contem")) {
+                        id = auxiliar.getString("id");
+                        con.desconecta();
+                        return true;
+                    }
+                }
+            }
+            con.desconecta();
+
+            return false;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        con.desconecta();
+        return false;
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

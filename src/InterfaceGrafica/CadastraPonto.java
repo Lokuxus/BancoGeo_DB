@@ -177,19 +177,18 @@ public class CadastraPonto extends javax.swing.JFrame {
         ResultSet auxiliar;
         try {
             con.conecta();
-            con.stm = con.con.prepareStatement("insert into ponto (pointo,data) values (SELECT ST_GeomFromText('POINT(?)',4326),?)");
-            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
-            con.stm.setString(2, data.getText() + " " + hora.getText());
+            con.stm = con.con.prepareStatement("insert into ponto (pointo,data) values (ST_GeomFromText('POINT(" + longitude.getText() + " " + latitude.getText() + ")',4326),to_timestamp('" + data.getText() + " " + hora.getText() + "', 'DD/MM/YYYY hh24:mi:ss'))");
+//            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
+//            con.stm.setString(1, data.getText() + " " + hora.getText());
             con.stm.execute();
             con.stm = con.con.prepareStatement("select * from ponto order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             con.rs = con.stm.executeQuery();
             con.rs.first();
             if (con.rs.isLast()) {
                 ID = con.rs.getString(1);
-                if (MenuPrincipal.testaEstacionamento(con, con.rs.getString("pointo"))) {
-                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id);
-                    con.stm.execute();
-                    con.rs.first();
+                if (MenuPrincipal.testaEstacionamento(con.rs.getString("pointo"))) {
+                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    con.rs = con.stm.executeQuery();
                     estacionamento = " e no estacionamento " + con.rs.getString(1);
                 }
                 JOptionPane.showMessageDialog(null, "Primeiro ponto" + estacionamento);
@@ -201,27 +200,27 @@ public class CadastraPonto extends javax.swing.JFrame {
                 con.rs.next();
                 pontemp2 = con.rs.getString("data");
                 auxiliar = con.getRs();
-                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM ('" + pontemp2 + "' - '" + pontemp1 + "'))");
-                con.stm.execute();
+                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM (to_timestamp('" + pontemp2 + "', 'YYYY/MM/DD hh24:mi:ss') - to_timestamp('" + pontemp1 + "', 'YYYY/MM/DD hh24:mi:ss')))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.rs = con.stm.executeQuery();
                 con.rs.first();
-                diferenca = (con.rs.getInt(1) / 3600) / 60;
+                diferenca = con.rs.getFloat(1);
                 auxiliar.last();
                 pontemp1 = auxiliar.getString("pointo");
-                auxiliar.next();
+                auxiliar.previous();
                 pontemp2 = auxiliar.getString("pointo");
-                con.stm = con.con.prepareStatement("select ST_Distance_Sphere('" + pontemp2 + "','" + pontemp1 + "')");
-                con.stm.execute();
+                con.stm = con.con.prepareStatement("select ST_Distance_Sphere('" + pontemp2 + "','" + pontemp1 + "')", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.rs = con.stm.executeQuery();
                 con.rs.first();
                 distancia = con.rs.getFloat(1);
                 auxiliar.last();
-                if (MenuPrincipal.testaEstacionamento(con, auxiliar.getString("pointo"))) {
-                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id);
-                    con.stm.execute();
+                if (MenuPrincipal.testaEstacionamento(auxiliar.getString("pointo"))) {
+                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    con.rs = con.stm.executeQuery();
                     con.rs.first();
                     estacionamento = " e no estacionamento " + con.rs.getString(1);
                 } else {
                 }
-                JOptionPane.showMessageDialog(null, "Ponto incluido com sucesso e está a " + (distancia / diferenca) + estacionamento);
+                JOptionPane.showMessageDialog(null, "Ponto incluido com sucesso e está a " + ((distancia / diferenca) * 3.6) + estacionamento);
             }
 
             String i = (String) veiculo.getSelectedItem();

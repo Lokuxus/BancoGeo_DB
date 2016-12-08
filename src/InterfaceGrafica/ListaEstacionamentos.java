@@ -9,6 +9,8 @@ import Database.ConexaoJDBC;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,8 +22,8 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
      * Creates new form ControleProblemas
      */
     ConexaoJDBC con = new ConexaoJDBC();
-    String[] column = {"Estacionamento", "Preco", "Distancia"};
-    String sql = "select nome,preco_minuto,ST_Distance_Sphere('ST_GeomFromText('POINT(?)',4326)') as distancia from estacionamento order by distancia desc ";
+    String[] column = { "Estacionamento","Preco", "Distancia em Metros"};
+    String sql;
 
     public ListaEstacionamentos() {
         initComponents();
@@ -172,16 +174,16 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
         String[] colunas = col;
         con.conecta();
         try {
-            con.stm = con.con.prepareStatement(SQL, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
+            con.stm = con.con.prepareStatement("select nome,preco_minuto,ST_Distance_Sphere(ST_GeomFromText('POINT(" + longitude.getText() + "  " + latitude.getText() + ")',4326),area) as distancia from estacionamento order by distancia desc", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+//            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
             con.rs = con.stm.executeQuery();
             con.rs.first();
             do {
-                dados.add(new Object[]{con.rs.getInt("cod_problema"), con.rs.getString("descricao"), con.rs.getDate("dt_inicio"), con.rs.getDate("dt_termino"), con.rs.getString("ativo")});
+                dados.add(new Object[]{ con.rs.getString("nome"),con.rs.getFloat("preco_minuto"), con.rs.getFloat("distancia")});
             } while (con.rs.next());
 
         } catch (SQLException e) {
-
+            Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, e);
         }
 
         ModeloTabela tabela = new ModeloTabela(dados, colunas);
