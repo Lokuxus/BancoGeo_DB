@@ -23,16 +23,17 @@ public class CadastraPonto extends javax.swing.JFrame {
     /**
      * Creates new form CadastroProblemas
      */
-    MaskFormatter mask ;
+    MaskFormatter mask;
     MaskFormatter mask2;
     ConexaoJDBC con = new ConexaoJDBC();
+
     public CadastraPonto() {
         try {
-            this.mask= new MaskFormatter("##/##/####");
+            this.mask = new MaskFormatter("##/##/####");
             this.mask.setPlaceholderCharacter('_');
-            this.mask2= new MaskFormatter("##:##:##");
+            this.mask2 = new MaskFormatter("##:##:##");
             this.mask2.setPlaceholderCharacter('_');
-            
+
             initComponents();
             atualizaCombo();
         } catch (ParseException ex) {
@@ -167,49 +168,90 @@ public class CadastraPonto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void salvarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_salvarMouseClicked
-        try
-        {
-            con.conecta();
-            con.stm = con.con.prepareStatement("insert into ponto (latitude,longitude,data) values (?,?,?)");
-            con.stm.setString(1, latitude.getText());
-            con.stm.setString(2, longitude.getText());usargeofromtext
-            con.stm.setString(3, data.getText()+" "+hora.getText());
-            con.stm.execute();           
-//            con.stm.setInt(3, in);
-//            con.stm.setString(4, "00/00/0000");
-//            con.stm.setBoolean(5, false);
-
-            con.desconecta();
-            JOptionPane.showMessageDialog(null, "Problema incluido com sucesso");
-
-//            String i = (String)veiculo.getSelectedItem();
-//            int in=i.lastIndexOf(":");
-//            in=Integer.valueOf(i.substring(in+1));
-
-        }
-        catch(SQLException | NumberFormatException e)
-        {
-            JOptionPane.showMessageDialog(null, "Erro ao inserir problema : "+e.getMessage());
-        }
-    }//GEN-LAST:event_salvarMouseClicked
-    
-    public void atualizaCombo()
-    {
+        String pontemp1;
+        String pontemp2;
+        String ID;
+        float diferenca;
+        float distancia;
+        String estacionamento = "";
+        ResultSet auxiliar;
         try {
             con.conecta();
-            con.stm = con.con.prepareStatement("select * from veiculo order by id",ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            con.rs=con.stm.executeQuery();
+            con.stm = con.con.prepareStatement("insert into ponto (pointo,data) values (SELECT ST_GeomFromText('POINT(?)',4326),?)");
+            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
+            con.stm.setString(2, data.getText() + " " + hora.getText());
+            con.stm.execute();
+            con.stm = con.con.prepareStatement("select * from ponto order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            con.rs = con.stm.executeQuery();
+            con.rs.first();
+            if (con.rs.isLast()) {
+                ID = con.rs.getString(1);
+                if (MenuPrincipal.testaEstacionamento(con, con.rs.getString("pointo"))) {
+                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id);
+                    con.stm.execute();
+                    con.rs.first();
+                    estacionamento = " e no estacionamento " + con.rs.getString(1);
+                }
+                JOptionPane.showMessageDialog(null, "Primeiro ponto" + estacionamento);
+            } else {
+                con.rs.last();
+                ID = con.rs.getString(1);
+                con.rs.previous();
+                pontemp1 = con.rs.getString("data");
+                con.rs.next();
+                pontemp2 = con.rs.getString("data");
+                auxiliar = con.getRs();
+                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM ('" + pontemp2 + "' - '" + pontemp1 + "'))");
+                con.stm.execute();
+                con.rs.first();
+                diferenca = (con.rs.getInt(1) / 3600) / 60;
+                auxiliar.last();
+                pontemp1 = auxiliar.getString("pointo");
+                auxiliar.next();
+                pontemp2 = auxiliar.getString("pointo");
+                con.stm = con.con.prepareStatement("select ST_Distance_Sphere('" + pontemp2 + "','" + pontemp1 + "')");
+                con.stm.execute();
+                con.rs.first();
+                distancia = con.rs.getFloat(1);
+                auxiliar.last();
+                if (MenuPrincipal.testaEstacionamento(con, auxiliar.getString("pointo"))) {
+                    con.stm = con.con.prepareStatement("select nome from estacionamento where id = " + MenuPrincipal.id);
+                    con.stm.execute();
+                    con.rs.first();
+                    estacionamento = " e no estacionamento " + con.rs.getString(1);
+                } else {
+                }
+                JOptionPane.showMessageDialog(null, "Ponto incluido com sucesso e está a " + (distancia / diferenca) + estacionamento);
+            }
+
+            String i = (String) veiculo.getSelectedItem();
+            int in = i.lastIndexOf(":");
+            in = Integer.valueOf(i.substring(in + 1));
+            con.stm = con.con.prepareStatement("insert into veiculo_ponto (id_veiculo,id_ponto) values (" + in + "," + ID + ")");
+            con.stm.execute();
+            con.desconecta();
+            dispose();
+        } catch (SQLException | NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao inserir ponto : " + e.getMessage());
+        }
+    }//GEN-LAST:event_salvarMouseClicked
+
+    public void atualizaCombo() {
+        try {
+            con.conecta();
+            con.stm = con.con.prepareStatement("select * from veiculo order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            con.rs = con.stm.executeQuery();
             con.rs.first();
             veiculo.removeAllItems();
-            do{
-                veiculo.addItem(new String(con.rs.getString("placa")+":"+con.rs.getInt("id")));
-            }while(con.rs.next());
+            do {
+                veiculo.addItem(new String(con.rs.getString("placa") + ":" + con.rs.getInt("id")));
+            } while (con.rs.next());
             con.desconecta();
         } catch (SQLException ex) {
             Logger.getLogger(CadastraPonto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */

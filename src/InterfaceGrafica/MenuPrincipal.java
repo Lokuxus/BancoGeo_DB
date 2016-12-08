@@ -5,14 +5,14 @@
  */
 package InterfaceGrafica;
 
-import bancodedados.*;
+import Database.ConexaoJDBC;
 
 /**
  *
  * @author gustavo
  */
 public class MenuPrincipal extends javax.swing.JFrame {
-
+    public static String id;
     /**
      * Creates new form MenuPrincipal
      */
@@ -20,6 +20,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
         initComponents();
     }
 
+    public static boolean testaEstacionamento(ConexaoJDBC con, String ponto){
+     return true;   
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,25 +35,47 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         jMenuItem4 = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
+        buttonVeiculo = new javax.swing.JButton();
+        buttonPonto = new javax.swing.JButton();
+        buttonbuscaEsta = new javax.swing.JButton();
 
         jMenuItem4.setText("jMenuItem4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Cadastrar Veiculo");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        buttonVeiculo.setText("Cadastrar Veiculo");
+        buttonVeiculo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                buttonVeiculoMouseClicked(evt);
             }
         });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonVeiculoActionPerformed(evt);
+            }
+        });
+
+        buttonPonto.setText("Cadastrar Ponto");
+        buttonPonto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonPontoMouseClicked(evt);
+            }
+        });
+        buttonPonto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPontoActionPerformed(evt);
+            }
+        });
+
+        buttonbuscaEsta.setText("Buscar Estacionamentos");
+        buttonbuscaEsta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonbuscaEstaMouseClicked(evt);
+            }
+        });
+        buttonbuscaEsta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonbuscaEstaActionPerformed(evt);
             }
         });
 
@@ -58,42 +84,22 @@ public class MenuPrincipal extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1)
-                .addGap(0, 115, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(buttonVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonPonto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonbuscaEsta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jButton1)
-                .addGap(0, 311, Short.MAX_VALUE))
+                .addComponent(buttonVeiculo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonPonto)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(buttonbuscaEsta)
+                .addGap(0, 269, Short.MAX_VALUE))
         );
-
-        jMenu1.setText("Cadastro");
-
-        jMenuItem2.setText("Problemas");
-        jMenuItem2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItem2MouseClicked(evt);
-            }
-        });
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem2);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu3.setText("Controle");
-        jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu3MouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -109,33 +115,35 @@ public class MenuPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        ListaControleProblemas c = new ListaControleProblemas();
-        c.setLocationRelativeTo(null);
-        c.setVisible(true);
-    }//GEN-LAST:event_jMenu3MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void buttonVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVeiculoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_buttonVeiculoActionPerformed
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void buttonVeiculoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonVeiculoMouseClicked
         CadastroVeiculo c = new CadastroVeiculo();
         c.setLocationRelativeTo(null);
         c.setVisible(true);
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_buttonVeiculoMouseClicked
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void buttonPontoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonPontoMouseClicked
         CadastraPonto c = new CadastraPonto();
         c.setLocationRelativeTo(null);
         c.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_buttonPontoMouseClicked
 
-    private void jMenuItem2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MouseClicked
-        CadastraPonto c = new CadastraPonto();
+    private void buttonPontoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPontoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonPontoActionPerformed
+
+    private void buttonbuscaEstaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonbuscaEstaMouseClicked
+        ListaEstacionamentos c = new ListaEstacionamentos();
         c.setLocationRelativeTo(null);
         c.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2MouseClicked
+    }//GEN-LAST:event_buttonbuscaEstaMouseClicked
+
+    private void buttonbuscaEstaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonbuscaEstaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonbuscaEstaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -173,11 +181,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JButton buttonPonto;
+    private javax.swing.JButton buttonVeiculo;
+    private javax.swing.JButton buttonbuscaEsta;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
