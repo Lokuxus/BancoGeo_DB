@@ -1,29 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package InterfaceGrafica;
 
 import Database.ConexaoJDBC;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author gustavo
- */
 public class MenuPrincipal extends javax.swing.JFrame {
 
     public static String id;
 
-    /**
-     * Creates new form MenuPrincipal
-     */
     public MenuPrincipal() {
         initComponents();
     }
@@ -78,6 +64,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
         buttonVeiculo = new javax.swing.JButton();
         buttonPonto = new javax.swing.JButton();
         buttonbuscaEsta = new javax.swing.JButton();
+        buttonListaGastos = new javax.swing.JButton();
 
         jMenuItem4.setText("jMenuItem4");
 
@@ -119,6 +106,18 @@ public class MenuPrincipal extends javax.swing.JFrame {
             }
         });
 
+        buttonListaGastos.setText("Lista Gastos");
+        buttonListaGastos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonListaGastosMouseClicked(evt);
+            }
+        });
+        buttonListaGastos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonListaGastosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -127,7 +126,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(buttonVeiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonPonto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(buttonbuscaEsta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(buttonbuscaEsta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonListaGastos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -138,7 +138,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addComponent(buttonPonto)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(buttonbuscaEsta)
-                .addGap(0, 269, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonListaGastos)
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -185,6 +187,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_buttonbuscaEstaActionPerformed
 
+    private void buttonListaGastosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonListaGastosMouseClicked
+        ListaGasto c = new ListaGasto();
+        c.setLocationRelativeTo(null);
+        c.setVisible(true);
+    }//GEN-LAST:event_buttonListaGastosMouseClicked
+
+    private void buttonListaGastosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonListaGastosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonListaGastosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -221,6 +233,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonListaGastos;
     private javax.swing.JButton buttonPonto;
     private javax.swing.JButton buttonVeiculo;
     private javax.swing.JButton buttonbuscaEsta;

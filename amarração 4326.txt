@@ -1,7 +1,6 @@
 create database db_geometrico;
 
 create extension postgis;
-create extension postgis;
 
 Create table estacionamento (
 	id SERIAL PRIMARY KEY,
@@ -12,20 +11,66 @@ Create table estacionamento (
 
 create table veiculo (
 	id SERIAL PRIMARY KEY,
-	placa varchar(255) unique
+	placa varchar(255) unique not null
 );
 
 create table ponto (
 	id SERIAL PRIMARY KEY,
-	data timestamp,
-	pointo geometry
+	data timestamp not null,
+	pointo geometry not null,
+	id_veiculo integer references veiculo (id) not null
 );
 
-create table veiculo_ponto (
-	id_veiculo SERIAL,
-	id_ponto SERIAL
+create table comanda (
+	id SERIAL PRIMARY KEY,
+	data_inicio timestamp,
+	data_fim timestamp,
+	id_veiculo integer references veiculo(id),
+	id_estacionamento integer references estacionamento (id)
 );
+
 
 
 insert into estacionamento (nome,preco_minuto,area) values ('Univali', 10 , st_geomfromtext('POLYGON(( -48.0 -26.0 , -48.0 -25.9 , -47.9 -25.9 , -47.9 -26 , -48.0 -26.0))',4326));
 insert into estacionamento (nome,preco_minuto,area) values ('Univali2', 10 , st_geomfromtext('POLYGON(( -47.0 -25.0 , -47.0 -24.9 , -46.9 -24.9 , -46.9 -25 , -47.0 -25.0))',4326));
+
+create or replace function mantem_comanda() returns trigger as 
+$$
+declare
+	estacionado boolean;
+	estacionado2 boolean;
+	aux record;
+	estacionamento record;
+begin
+	estacionado2 := false;
+	for aux in select * from estacionamento loop
+		estacionado := ST_Contains(aux.area, new.pointo);
+		if estacionado = true then
+			estacionamento := aux;
+			estacionado2 := true;
+		end if;
+	end loop;
+	
+	if estacionado2 = true then
+		aux := * from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
+		estacionado := ST_Contains(estacionamento.area, aux.pointo);
+		if estacionado = false then
+			insert into comanda (data_inicio, id_veiculo, id_estacionamento) values (new.data, new.id_veiculo, estacionamento.id);
+		end if;
+	else
+		aux := * from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
+		estacionado := ST_Contains(estacionamento.area, aux.pointo);
+		if estacionado = true then
+			aux := * from comanda where id_veiculo = new.id_veiculo and id_estacionamento = estacionamento.id and data_fim = null;
+			update comanda set data_fim = new.data where id = aux.id;
+		end if;
+	end if;
+	
+	return NEW;
+	
+end
+$$
+language plpgsql;
+
+create trigger mantem_comanda before insert on ponto
+for each row execute procedure mantem_comanda();

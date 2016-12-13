@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package InterfaceGrafica;
 
 import Database.ConexaoJDBC;
@@ -14,15 +9,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
-/**
- *
- * @author gustavo
- */
 public class CadastraPonto extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CadastroProblemas
-     */
     MaskFormatter mask;
     MaskFormatter mask2;
     ConexaoJDBC con = new ConexaoJDBC();
@@ -177,7 +165,10 @@ public class CadastraPonto extends javax.swing.JFrame {
         ResultSet auxiliar;
         try {
             con.conecta();
-            con.stm = con.con.prepareStatement("insert into ponto (pointo,data) values (ST_GeomFromText('POINT(" + longitude.getText() + " " + latitude.getText() + ")',4326),to_timestamp('" + data.getText() + " " + hora.getText() + "', 'DD/MM/YYYY hh24:mi:ss'))");
+            String i = (String) veiculo.getSelectedItem();
+            int in = i.lastIndexOf(":");
+            in = Integer.valueOf(i.substring(in + 1));
+            con.stm = con.con.prepareStatement("insert into ponto (pointo,data,id_veiculo) values (ST_GeomFromText('POINT(" + longitude.getText() + " " + latitude.getText() + ")',4326),to_timestamp('" + data.getText() + " " + hora.getText() + "', 'DD/MM/YYYY hh24:mi:ss'),"+in+")");
 //            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
 //            con.stm.setString(1, data.getText() + " " + hora.getText());
             con.stm.execute();
@@ -222,12 +213,6 @@ public class CadastraPonto extends javax.swing.JFrame {
                 }
                 JOptionPane.showMessageDialog(null, "Ponto incluido com sucesso e está a " + ((distancia / diferenca) * 3.6) + estacionamento);
             }
-
-            String i = (String) veiculo.getSelectedItem();
-            int in = i.lastIndexOf(":");
-            in = Integer.valueOf(i.substring(in + 1));
-            con.stm = con.con.prepareStatement("insert into veiculo_ponto (id_veiculo,id_ponto) values (" + in + "," + ID + ")");
-            con.stm.execute();
             con.desconecta();
             dispose();
         } catch (SQLException | NumberFormatException e) {

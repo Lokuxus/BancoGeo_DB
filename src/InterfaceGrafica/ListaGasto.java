@@ -1,4 +1,3 @@
-
 package InterfaceGrafica;
 
 import Database.ConexaoJDBC;
@@ -8,17 +7,33 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-public class ListaEstacionamentos extends javax.swing.JFrame {
+public class ListaGasto extends javax.swing.JFrame {
 
 
     ConexaoJDBC con = new ConexaoJDBC();
-    String[] column = { "Estacionamento","Preco", "Distancia em Metros"};
+    String[] column = {"Estacionamento", "Entrada", "Saída", "Permanencia", "Valor"};
     String sql;
 
-    public ListaEstacionamentos() {
+    public ListaGasto() {
         initComponents();
+        atualizaCombo();
         this.setExtendedState(MAXIMIZED_BOTH);
+    }
+
+    public void atualizaCombo() {
+        try {
+            con.conecta();
+            con.stm = con.con.prepareStatement("select * from veiculo order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            con.rs = con.stm.executeQuery();
+            con.rs.first();
+            veiculo.removeAllItems();
+            do {
+                veiculo.addItem(new String(con.rs.getString("placa") + ":" + con.rs.getInt("id")));
+            } while (con.rs.next());
+            con.desconecta();
+        } catch (SQLException ex) {
+            Logger.getLogger(CadastraPonto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -31,21 +46,13 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        longitude = new javax.swing.JTextField();
         buscabutton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         Dados = new javax.swing.JTable();
-        latitude = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        veiculo = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        longitude.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                longitudeKeyReleased(evt);
-            }
-        });
 
         buscabutton.setText("Buscar");
         buscabutton.setToolTipText("Limpa o filtro de pesquisa");
@@ -78,51 +85,42 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(Dados);
 
-        latitude.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                latitudeKeyReleased(evt);
+        veiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                veiculoActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Latitude");
-
-        jLabel2.setText("Longitude");
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setText("Listagem de Gastos");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(latitude, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-                            .addComponent(longitude))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buscabutton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 462, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(veiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(buscabutton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(7, 7, 7)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(longitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buscabutton))
-                .addGap(7, 7, 7)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(latitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(veiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscabutton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -140,10 +138,6 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void latitudeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_latitudeKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_latitudeKeyReleased
-
     private void DadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DadosMouseClicked
 
     }//GEN-LAST:event_DadosMouseClicked
@@ -156,22 +150,30 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
         preencherTabela(sql, column);
     }//GEN-LAST:event_buscabuttonMouseClicked
 
-    private void longitudeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_longitudeKeyReleased
-
-    }//GEN-LAST:event_longitudeKeyReleased
+    private void veiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_veiculoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_veiculoActionPerformed
 
     public void preencherTabela(String SQL, String[] col) {
         ArrayList dados = new ArrayList();
         String[] colunas = col;
+        ResultSet extra;
         con.conecta();
         try {
-            con.stm = con.con.prepareStatement("select nome,preco_minuto,ST_Distance_Sphere(ST_GeomFromText('POINT(" + longitude.getText() + "  " + latitude.getText() + ")',4326),area) as distancia from estacionamento order by distancia asc;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-//            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
+            String i = (String) veiculo.getSelectedItem();
+            int in = i.lastIndexOf(":");
+            in = Integer.valueOf(i.substring(in + 1));
+            con.stm = con.con.prepareStatement("select est.nome cm.data_inicio, cm.data_fim, est.preco_minuto from comanda cm where id_veiculo = " + in + "join estacionamento est on (cm.id_estacionamento = est.id);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             con.rs = con.stm.executeQuery();
-            con.rs.first();
+            extra = con.rs;
+            extra.first();
             do {
-                dados.add(new Object[]{ con.rs.getString("nome"),con.rs.getFloat("preco_minuto"), con.rs.getFloat("distancia")});
-            } while (con.rs.next());
+                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM (" + extra.getTimestamp("data_fim") + " - " + extra.getTimestamp("data_inicio") + "))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.rs = con.stm.executeQuery();
+                con.rs.first();
+                float tempo = con.rs.getFloat(1);
+                dados.add(new Object[]{extra.getString("nome"), extra.getTimestamp("data_inicio"), extra.getTimestamp("data_fim"), tempo, tempo * extra.getFloat("preco_minuto")});
+            } while (extra.next());
 
         } catch (SQLException e) {
             Logger.getLogger(MenuPrincipal.class.getName()).log(Level.SEVERE, null, e);
@@ -199,14 +201,18 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ListaEstacionamentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaGasto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ListaEstacionamentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaGasto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ListaEstacionamentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaGasto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ListaEstacionamentos.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ListaGasto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -215,7 +221,7 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ListaEstacionamentos().setVisible(true);
+                new ListaGasto().setVisible(true);
             }
         });
     }
@@ -223,11 +229,9 @@ public class ListaEstacionamentos extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable Dados;
     private javax.swing.JButton buscabutton;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField latitude;
-    private javax.swing.JTextField longitude;
+    private javax.swing.JComboBox<String> veiculo;
     // End of variables declaration//GEN-END:variables
 }

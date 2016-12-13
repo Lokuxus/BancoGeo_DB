@@ -50,6 +50,7 @@
                       <Component id="buttonVeiculo" max="32767" attributes="0"/>
                       <Component id="buttonPonto" max="32767" attributes="0"/>
                       <Component id="buttonbuscaEsta" alignment="0" max="32767" attributes="0"/>
+                      <Component id="buttonListaGastos" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -63,7 +64,9 @@
                   <Component id="buttonPonto" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="buttonbuscaEsta" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="269" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="buttonListaGastos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -94,6 +97,15 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonbuscaEstaMouseClicked"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonbuscaEstaActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonListaGastos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Lista Gastos"/>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="buttonListaGastosMouseClicked"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonListaGastosActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

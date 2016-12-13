@@ -1,22 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package InterfaceGrafica;
 
 import Database.ConexaoJDBC;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author gustavo
- */
+
 public class CadastroVeiculo extends javax.swing.JFrame {
 
-    /**
-     * Creates new form CadastroCategoria
-     */
+
     ConexaoJDBC con = new ConexaoJDBC();
     
     public CadastroVeiculo() {
