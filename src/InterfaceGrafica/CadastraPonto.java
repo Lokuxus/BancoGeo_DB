@@ -172,7 +172,7 @@ public class CadastraPonto extends javax.swing.JFrame {
 //            con.stm.setString(1, longitude.getText() + " " + latitude.getText());
 //            con.stm.setString(1, data.getText() + " " + hora.getText());
             con.stm.execute();
-            con.stm = con.con.prepareStatement("select * from ponto order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            con.stm = con.con.prepareStatement("select id,data,st_astext(pointo) as pointo,id_veiculo from ponto order by id", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             con.rs = con.stm.executeQuery();
             con.rs.first();
             if (con.rs.isLast()) {
@@ -199,7 +199,7 @@ public class CadastraPonto extends javax.swing.JFrame {
                 pontemp1 = auxiliar.getString("pointo");
                 auxiliar.previous();
                 pontemp2 = auxiliar.getString("pointo");
-                con.stm = con.con.prepareStatement("select ST_Distance_Sphere('" + pontemp2 + "','" + pontemp1 + "')", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.stm = con.con.prepareStatement("select ST_Distance_Sphere(ST_GeomFromText('" + pontemp2 + "',4326),ST_GeomFromText('" + pontemp1 + "',4326))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 con.rs = con.stm.executeQuery();
                 con.rs.first();
                 distancia = con.rs.getFloat(1);

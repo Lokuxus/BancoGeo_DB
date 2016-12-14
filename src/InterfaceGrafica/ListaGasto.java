@@ -163,16 +163,21 @@ public class ListaGasto extends javax.swing.JFrame {
             String i = (String) veiculo.getSelectedItem();
             int in = i.lastIndexOf(":");
             in = Integer.valueOf(i.substring(in + 1));
-            con.stm = con.con.prepareStatement("select est.nome cm.data_inicio, cm.data_fim, est.preco_minuto from comanda cm where id_veiculo = " + in + "join estacionamento est on (cm.id_estacionamento = est.id);", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            con.stm = con.con.prepareStatement("select * from comanda where id_veiculo = " + in + ";", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             con.rs = con.stm.executeQuery();
             extra = con.rs;
             extra.first();
             do {
-                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM (" + extra.getTimestamp("data_fim") + " - " + extra.getTimestamp("data_inicio") + "))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+           //     con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM (" + extra.getString("data_fim") + " - " + extra.getString("data_inicio") + "))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.stm = con.con.prepareStatement("SELECT EXTRACT(EPOCH FROM (to_timestamp('" + extra.getString("data_fim") + "', 'YYYY/MM/DD hh24:mi:ss') - to_timestamp('" + extra.getString("data_inicio") + "', 'YYYY/MM/DD hh24:mi:ss')))", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 con.rs = con.stm.executeQuery();
                 con.rs.first();
-                float tempo = con.rs.getFloat(1);
-                dados.add(new Object[]{extra.getString("nome"), extra.getTimestamp("data_inicio"), extra.getTimestamp("data_fim"), tempo, tempo * extra.getFloat("preco_minuto")});
+                float tempo = con.rs.getFloat(1)/60;
+                con.stm = con.con.prepareStatement("SELECT * from estacionamento where id ="+extra.getInt("id_estacionamento")+"", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                con.rs = con.stm.executeQuery();
+                con.rs.first();
+                
+                dados.add(new Object[]{con.rs.getString("nome"), extra.getTimestamp("data_inicio"), extra.getTimestamp("data_fim"), tempo, tempo * con.rs.getFloat("preco_minuto")});
             } while (extra.next());
 
         } catch (SQLException e) {

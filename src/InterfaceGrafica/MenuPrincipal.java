@@ -19,25 +19,27 @@ public class MenuPrincipal extends javax.swing.JFrame {
         ConexaoJDBC con = new ConexaoJDBC();
         con.conecta();
         try {
-            con.stm = con.con.prepareStatement("select id, nome, area from estacionamento;");
+            con.stm = con.con.prepareStatement("select id, nome, st_astext(area) as area from estacionamento;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 //            Connection conexao = con.getCon();
 //            PreparedStatement ps = conexao.prepareStatement("select id, nome, area from estacionamento;");
 //            ResultSet rsps.executeQuery();
-            con.stm.execute();
+            con.rs = con.stm.executeQuery();
 
             if (con.rs != null) {
                 auxiliar = con.rs;
                 auxiliar.first();
-                while (auxiliar.next()) {
+                do {
 
-                    con.stm = con.con.prepareStatement("select ST_Contains(" + auxiliar.getString("area") + ", " + ponto + ") as contem;");
-                    con.stm.execute();
+                    con.stm = con.con.prepareStatement("select ST_Contains(ST_GeomFromText('" + auxiliar.getString("area") + "',4326), ST_GeomFromText('" + ponto + "',4326)) as contem;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    con.rs = con.stm.executeQuery();
                     if (con.rs.getBoolean("contem")) {
                         id = auxiliar.getString("id");
                         con.desconecta();
                         return true;
                     }
-                }
+                    
+                }while (auxiliar.next());
+            
             }
             con.desconecta();
 

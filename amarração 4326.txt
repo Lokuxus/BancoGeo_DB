@@ -40,6 +40,8 @@ declare
 	estacionado boolean;
 	estacionado2 boolean;
 	aux record;
+	auxarea geometry;
+	auxid integer;
 	estacionamento record;
 begin
 	estacionado2 := false;
@@ -50,19 +52,33 @@ begin
 			estacionado2 := true;
 		end if;
 	end loop;
-	
+    
 	if estacionado2 = true then
-		aux := * from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
-		estacionado := ST_Contains(estacionamento.area, aux.pointo);
+		auxarea := pointo from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
+		if ST_IsEmpty(auxarea) then
+			insert into comanda (data_inicio, id_veiculo, id_estacionamento) values (new.data, new.id_veiculo, estacionamento.id);
+			return new;
+		end if;
+		estacionado := ST_Contains(estacionamento.area, auxarea);
 		if estacionado = false then
 			insert into comanda (data_inicio, id_veiculo, id_estacionamento) values (new.data, new.id_veiculo, estacionamento.id);
 		end if;
 	else
-		aux := * from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
-		estacionado := ST_Contains(estacionamento.area, aux.pointo);
+		auxarea := pointo from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
+		if ST_IsEmpty(auxarea) then
+			return new;
+		end if;
+		for aux in select * from estacionamento loop
+		estacionado := ST_Contains(aux.area, auxarea);
 		if estacionado = true then
-			aux := * from comanda where id_veiculo = new.id_veiculo and id_estacionamento = estacionamento.id and data_fim = null;
-			update comanda set data_fim = new.data where id = aux.id;
+			estacionamento := aux;
+			estacionado2 := true;
+		end if;
+		end loop;
+		
+		if estacionado2 = true then
+			auxid := id from comanda where id_veiculo = new.id_veiculo and id_estacionamento = estacionamento.id order by data_inicio desc limit 1;
+			update comanda set data_fim = new.data where id = auxid;
 		end if;
 	end if;
 	
@@ -74,3 +90,5 @@ language plpgsql;
 
 create trigger mantem_comanda before insert on ponto
 for each row execute procedure mantem_comanda();
+
+insert into estacionamento (nome,preco_minuto,area) values ('Univali3', 15 , st_geomfromtext('POLYGON(( 0.0 0.0 , 0.0 1.0 , 1.0 1.0 , 1.0 0.0 , 0.0 0.0))',4326));
