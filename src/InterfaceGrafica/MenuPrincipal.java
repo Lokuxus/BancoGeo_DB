@@ -30,9 +30,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 auxiliar.first();
                 do {
 
-                    con.stm = con.con.prepareStatement("select ST_Contains(ST_GeomFromText('" + auxiliar.getString("area") + "',4326), ST_GeomFromText('" + ponto + "',4326)) as contem;", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                    con.stm = con.con.prepareStatement("select ST_Contains(ST_GeomFromText('" + auxiliar.getString("area") + "',4326), ST_GeomFromText('" + ponto + "',4326));", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                     con.rs = con.stm.executeQuery();
-                    if (con.rs.getBoolean("contem")) {
+                    con.rs.first();
+                    if (con.rs.getBoolean(1)) {
                         id = auxiliar.getString("id");
                         con.desconecta();
                         return true;

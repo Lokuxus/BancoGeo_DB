@@ -55,7 +55,7 @@ begin
     
 	if estacionado2 = true then
 		auxarea := pointo from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
-		if ST_IsEmpty(auxarea) then
+		if auxarea is null then
 			insert into comanda (data_inicio, id_veiculo, id_estacionamento) values (new.data, new.id_veiculo, estacionamento.id);
 			return new;
 		end if;
@@ -65,7 +65,7 @@ begin
 		end if;
 	else
 		auxarea := pointo from ponto where id_veiculo = new.id_veiculo order by data desc limit 1;
-		if ST_IsEmpty(auxarea) then
+		if auxarea is null then
 			return new;
 		end if;
 		for aux in select * from estacionamento loop
